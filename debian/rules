@@ -1,0 +1,78 @@
+#!/usr/bin/make -f
+
+CFLAGS = -Wall -g
+
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+	CFLAGS += -O0
+else
+	CFLAGS += -O2
+endif
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+
+	touch configure-stamp
+
+build: build-stamp
+
+build-stamp: configure-stamp 
+	dh_testdir
+
+	$(MAKE)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp configure-stamp
+
+	rm -f debian/ncc.substvars
+	rm -f debian/files
+
+	-$(MAKE) distclean
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k 
+	dh_installdirs
+
+	$(MAKE) install DESTDIR=$(CURDIR)/debian/ncc/usr
+
+
+binary-indep: build install
+
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs -k doc/CHANGES
+	dh_installdocs -Xdoc/LICENSE -Xdoc/nognu -Xdoc/dbstree.aux \
+                       -Xdoc/dbstree.dvi -Xdoc/dbstree.log -Xdoc/farg.c \
+                       -Xdoc/fptr.c README.1.8.rw doc/*
+	dh_installexamples doc/fptr.c doc/farg.c
+	dh_installman
+	dh_link usr/bin/ncc usr/bin/nccar
+	dh_link usr/bin/ncc usr/bin/nccld
+	dh_link usr/bin/ncc usr/bin/nccc++
+	dh_link usr/bin/ncc usr/bin/nccg++
+	dh_link usr/bin/nccnav usr/bin/nccnavi
+	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccar.1.gz
+	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccld.1.gz
+	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccc++.1.gz
+	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccg++.1.gz
+	dh_link usr/share/man/man1/nccnav.1.gz usr/share/man/man1/nccnavi.1.gz
+	dh_strip
+	dh_compress
+	dh_fixperms
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

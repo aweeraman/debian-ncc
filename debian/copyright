@@ -1,0 +1,17 @@
+This package was debianized by Anuradha Weeraman <aweeraman@gmail.com> on
+Sat,  9 Sep 2006 10:32:38 +0600.
+
+It was downloaded from http://students.ceid.upatras.gr/~sxanth/ncc 
+
+Copyright Holder: Stelios Xanthakis <sxanth@ceid.upatras.gr>
+
+Program written & Copyright (C) Stelios Xanthakis 2002, 2003, 2004, 2005
+
+gengraph.py was written by Jose Vasconcellos <jvasco@bellatlantic.net>
+and can be distributed under the terms of GPL.
+
+You are free to distribute this software under the terms of the
+Artistic License.
+
+On Debian systems, the complete text of the Artistic License
+can be found in the file `/usr/share/common-licenses/Artistic'.
