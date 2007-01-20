@@ -9,6 +9,7 @@ Uploaders: NIIBE Yutaka <gniibe@fsij.org>
 Package: ncc
 Architecture: any
 Depends: ${shlibs:Depends}, python (>= 2.3.0)
+Conflicts: nemerle
 Description: C source code analyzer
  A small, extensible tool that provides program analysis data of C
  source code. This data can be used to analyze the function call flow
