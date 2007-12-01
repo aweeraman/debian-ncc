@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-CFLAGS = -Wall -g
+CFLAGS = -Wall -g 
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
@@ -31,7 +31,7 @@ clean:
 	rm -f debian/ncc.substvars
 	rm -f debian/files
 
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 
 	dh_clean 
 
@@ -52,7 +52,7 @@ binary-arch: build install
 	dh_installchangelogs -k doc/CHANGES
 	dh_installdocs -Xdoc/LICENSE -Xdoc/nognu -Xdoc/dbstree.aux \
                        -Xdoc/dbstree.dvi -Xdoc/dbstree.log -Xdoc/farg.c \
-                       -Xdoc/fptr.c README.1.8.rw doc/*
+                       -Xdoc/fptr.c README.1.8.rw doc/* scripts
 	dh_installexamples doc/fptr.c doc/farg.c
 	dh_installman
 	dh_link usr/bin/ncc usr/bin/nccar

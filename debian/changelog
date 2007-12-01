@@ -1,3 +1,19 @@
+ncc (2.7-1) unstable; urgency=low
+
+  * New upstream release
+  * Added -Wno-write-strings to compiler flags
+  * Moved gengraph.py to /usr/share/doc/scripts (Closes: #411134)
+  * Removed dependency on Python
+  * Fixed lintian warning
+
+ -- Anuradha Weeraman (anu) <aweeraman@gmail.com>  Sat, 01 Dec 2007 14:50:09 -0500
+
+ncc (2.6-5) unstable; urgency=low
+
+  * Added gengraph.py and man page to /usr/bin (Closes: #411134)
+
+ -- Anuradha Weeraman (anu) <aweeraman@gmail.com>  Wed, 30 May 2007 23:49:52 -0400
+
 ncc (2.6-4) unstable; urgency=low
 
   * Conflicts with nemerle. Updated control file (Closes: #407405)
@@ -21,7 +37,7 @@ ncc (2.6-1) unstable; urgency=low
 
   * New upstream release.
   * Updated debhelper compatibility level
-  * Added NIIBE Yutaka as the uploader
+  * Added NIIEBE Yutaka as the uploader
   * Added NCC homepage to debian/control
   * Updated Standards-version to 3.7.2
   * Added debian/watch file

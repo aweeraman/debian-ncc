@@ -10,7 +10,7 @@
 #endif
 #endif
 
-#define NCC_VERSION "2.5"
+#define NCC_VERSION "2.7"
 #define GNU_VIOLATIONS
 #define LABEL_VALUES
 #define OUTPUT_EXT ".nccout"

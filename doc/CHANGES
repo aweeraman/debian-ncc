@@ -1,3 +1,20 @@
+New in 2.7
+==========
+
+- In the case where in a Makefile we had a target like:
+	gcc foo.c bar.c zoo.c -o program
+  using ncc instead of gcc would fail. Now this case is
+  handled correctly.  If -ncgcc is specified gcc will be
+  executed as above.  ncc instead will analyse each file
+  and then link the generated .nccout files to program.nccout.
+  (qemu)
+
+- Fixed leaving ncurses mode -> xterm -> re-enter ncurses in
+  nccnav.  Patch by Sylvain Beucler.
+
+- New command line option -nccpp=<preprocessor>, useful for
+  using ncc in cross compilation, from Jose Vasconcellos
+  
 New in 2.6
 ==========
 

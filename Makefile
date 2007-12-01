@@ -2,7 +2,7 @@
 # these are set by config
 CC = g++
 DESTDIR ?= /usr
-LCFLAGS = -g -O2
+LCFLAGS = -g -O2 -Wno-write-strings
 BINDIR = ${DESTDIR}/bin
 MANDIR = ${DESTDIR}/share/man
 INCLUDEDIR = ${DESTDIR}/include

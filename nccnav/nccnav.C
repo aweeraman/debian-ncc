@@ -1178,6 +1178,8 @@ void source_viewer_fatal ()
 
 void txtviewer (char *title, char *txt, unsigned int l, bool colored)
 {
+	def_prog_mode();		/* Save the tty modes		  */
+	endwin();			/* End curses mode temporarily	  */
 	if (colored) {
 		char *tmpc, cmd [100];
 		FILE *f = fopen (tmpc = ".tmp.c", "w");
@@ -1196,6 +1198,10 @@ void txtviewer (char *title, char *txt, unsigned int l, bool colored)
 		fflush (p);
 		pclose (p);
 	}
+	reset_prog_mode();		/* Return to the previous tty mode*/
+					/* stored by def_prog_mode() 	  */
+	refresh();			/* Do refresh() to restore the	  */
+					/* Screen contents		  */
 }
 
 #endif
@@ -1268,6 +1274,8 @@ void func_text (unsigned int f, bool color=false)
 void file_text (unsigned int i, bool color)
 {
 #ifdef SOURCE_VIEWER
+	def_prog_mode();		/* Save the tty modes		  */
+	endwin();			/* End curses mode temporarily	  */
 	if (color) {
 		char tmp [1024];
 		strcat (strcpy (tmp, COLOR_VIEWER" "), symbol_name (i));
@@ -1283,6 +1291,10 @@ void file_text (unsigned int i, bool color)
 		fflush (p);
 		pclose (p);
 	}
+	reset_prog_mode();		/* Return to the previous tty mode*/
+					/* stored by def_prog_mode() 	  */
+	refresh();			/* Do refresh() to restore the	  */
+					/* Screen contents		  */
 #endif
 }
 // "pd.mod"
@@ -1594,9 +1606,15 @@ static	bool rdetect = true;
 			cls ();
 			break;
 		case 'C':
-			end_graphics ();
+			// end_graphics ();
+			def_prog_mode();		/* Save the tty modes		  */
+			endwin();			/* End curses mode temporarily	  */
 			system ("bash");
-			init_graphics ();
+			reset_prog_mode();		/* Return to the previous tty mode*/
+							/* stored by def_prog_mode() 	  */
+			refresh();			/* Do refresh() to restore the	  */
+							/* Screen contents		  */
+			// init_graphics ();
 			break;
 		default:
 			M.move_arrow (key);
