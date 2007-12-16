@@ -1,0 +1,10 @@
+ncc for Debian
+--------------
+     
+Since ncc-2.7-2, /usr/bin/ncc has been renamed to /usr/bin/nccgen to prevent
+conflict with nemerle as identified by RC bug #407405. This is a Debian specific
+change as upstream continues to keep the existing name.
+
+Apologies to existing users of ncc for the inconvenience caused.
+     
+-- Anuradha Weeraman (anu) <aweeraman@gmail.com>  Sat, 15 Dec 2007 23:18:18 -0500

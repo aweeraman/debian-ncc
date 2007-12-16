@@ -55,15 +55,15 @@ binary-arch: build install
                        -Xdoc/fptr.c README.1.8.rw doc/* scripts
 	dh_installexamples doc/fptr.c doc/farg.c
 	dh_installman
-	dh_link usr/bin/ncc usr/bin/nccar
-	dh_link usr/bin/ncc usr/bin/nccld
-	dh_link usr/bin/ncc usr/bin/nccc++
-	dh_link usr/bin/ncc usr/bin/nccg++
+	dh_link usr/bin/nccgen usr/bin/nccar
+	dh_link usr/bin/nccgen usr/bin/nccld
+	dh_link usr/bin/nccgen usr/bin/nccc++
+	dh_link usr/bin/nccgen usr/bin/nccg++
 	dh_link usr/bin/nccnav usr/bin/nccnavi
-	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccar.1.gz
-	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccld.1.gz
-	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccc++.1.gz
-	dh_link usr/share/man/man1/ncc.1.gz usr/share/man/man1/nccg++.1.gz
+	dh_link usr/share/man/man1/nccgen.1.gz usr/share/man/man1/nccar.1.gz
+	dh_link usr/share/man/man1/nccgen.1.gz usr/share/man/man1/nccld.1.gz
+	dh_link usr/share/man/man1/nccgen.1.gz usr/share/man/man1/nccc++.1.gz
+	dh_link usr/share/man/man1/nccgen.1.gz usr/share/man/man1/nccg++.1.gz
 	dh_link usr/share/man/man1/nccnav.1.gz usr/share/man/man1/nccnavi.1.gz
 	dh_strip
 	dh_compress

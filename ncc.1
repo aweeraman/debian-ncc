@@ -1,10 +1,10 @@
-.TH ncc 1 "8 Mar 2003" "Linux" "ncc"
+.TH nccgen 1 "8 Mar 2003" "Linux" "nccgen"
 .SH NAME
-ncc \- source code analysis
+nccgen \- source code analysis
 .SH SYNOPSIS
-ncc file.c
+nccgen file.c
 .SH DESCRIPTION
-.B ncc
+.B nccgen
 is a program that can help you hack/study the source code of C programs.
 It will report which functions call which other functions, which functions
 are called by other functions and what global variables and members of
@@ -12,7 +12,7 @@ structures are used by functions. This is useful if you want to analyse
 a program and eventually hack it.
 .SH USAGE
 To use
-.B ncc
+.B nccgen
 find the 
 .B Makefile
 of the program you want to analyse. In the
@@ -21,7 +21,7 @@ locate  the line which sets the C compiler. That is
 usually something like
 .B CC = gcc
 and you must change it to
-.B CC = ncc -ncgcc -ncld -ncfabs.
+.B CC = nccgen -ncgcc -ncld -ncfabs.
 Then compile the application. It may be useful to also replace
 .B AR = ar
 with
@@ -32,7 +32,7 @@ with
 .B LD = nccld
 to link nccout object files.
 .SH OUTPUT
-.B ncc
+.B nccgen
 will produce a file with
 .B nccout
 extension for every C file analysed.

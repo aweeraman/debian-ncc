@@ -45,7 +45,7 @@ static void openout (char *f, char *mode = "w")
 	if (!f) return;
 	char *c = (char*) alloca (strlen (f) + sizeof OUTPUT_EXT);
 	freopen (strcat (strcpy (c, f), OUTPUT_EXT), mode, stdout);
-	fprintf (stderr, "ncc: output file is ["COLS"%s"COLE"]\n", c);
+	fprintf (stderr, "nccgen: output file is ["COLS"%s"COLE"]\n", c);
 }
 
 static void CATFILE (char *data, int len, FILE *out)
@@ -73,7 +73,7 @@ static void LINK (char **obj, int objn)
 		strcat (strcpy (ncobj, obj [i]), OUTPUT_EXT);
 		load_file L (ncobj);
 		if (L.success == ZC_OK) {
-			fprintf (stderr, "ncc: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
+			fprintf (stderr, "nccgen: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
 				 ncobj, L.len);
 			fprintf (stdout, NCCOBJ"%s\n", ncobj);
 			CATFILE (L.data, L.len, stdout);
@@ -142,7 +142,7 @@ static void nccar_x (int argc, char **argv)
 			n [strlen (n) - 1] = 0;
 			if (OUTF) fclose (OUTF);
 			OUTF = fopen (n, "w");
-			fprintf (stderr, "ncc: extract ["COLS"%s"COLE"]\n", n);
+			fprintf (stderr, "nccgen: extract ["COLS"%s"COLE"]\n", n);
 		}
 		if (OUTF)
 			fputs (tmp, OUTF);
@@ -433,11 +433,11 @@ void preproc (int argc, char**argv)
 
 	if (!(sourcefile = files [0])) {
 		if (objfileno) LINK (objfiles, objfileno);
-		else fprintf (stderr, "ncc: No C source file\n");
+		else fprintf (stderr, "nccgen: No C source file\n");
 		exit (0);
 	}
 	if (dontdoit) {
-		fprintf (stderr, "ncc: '-E'. Won't do it...\n");
+		fprintf (stderr, "nccgen: '-E'. Won't do it...\n");
 		exit (0);
 	}
 	if (spp) {

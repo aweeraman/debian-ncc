@@ -1,3 +1,13 @@
+ncc (2.7-2) unstable; urgency=medium
+
+  * Upgraded to Standard-Version 3.7.3
+  * Renamed /usr/bin/ncc to /usr/bin/nccgen (Closes: #407405)
+  * Urgency medium because this fixes RC bug
+  * Removed "Conflict: nemerle" from debian/control
+  * Added README.Debian
+
+ -- Anuradha Weeraman (anu) <aweeraman@gmail.com>  Sat, 15 Dec 2007 23:18:18 -0500
+
 ncc (2.7-1) unstable; urgency=low
 
   * New upstream release
