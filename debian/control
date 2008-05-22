@@ -1,10 +1,12 @@
 Source: ncc
 Section: devel
 Priority: optional
-Maintainer: Anuradha Weeraman (anu) <aweeraman@gmail.com>
+Maintainer: Anuradha Weeraman <anuradha@gnuromancer.org>
 Build-Depends: debhelper (>= 5.0.0), libncurses5-dev
 Standards-Version: 3.7.3
 Uploaders: NIIBE Yutaka <gniibe@fsij.org>
+Homepage: http://students.ceid.upatras.gr/~sxanth/ncc/
+DM-Upload-Allowed: yes
 
 Package: ncc
 Architecture: any
@@ -15,5 +17,3 @@ Description: C source code analyzer
  of programs with tools such as graphviz and springgraph. Included
  with this distribution is nccnav that can be used to study the call
  hierarchy of C source code on a text-mode console.
- .
- Homepage: http://students.ceid.upatras.gr/~sxanth/ncc/

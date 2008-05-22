@@ -1,3 +1,11 @@
+ncc (2.7-3) unstable; urgency=low
+
+  * Lintian cleanups
+  * Changed maintainer uid
+  * Added DM-Upload-Allowed to debian/control
+
+ -- Anuradha Weeraman <anuradha@gnuromancer.org>  Thu, 22 May 2008 00:33:05 -0400
+
 ncc (2.7-2) unstable; urgency=medium
 
   * Upgraded to Standard-Version 3.7.3
