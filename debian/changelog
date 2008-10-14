@@ -1,3 +1,10 @@
+ncc (2.7-4) unstable; urgency=low
+
+  * Updated standards version to 3.8.0
+  * Fixed bug in parser.C (Closes: #499717) 
+
+ -- Anuradha Weeraman <anuradha@gnuromancer.org>  Mon, 13 Oct 2008 20:19:06 -0400
+
 ncc (2.7-3) unstable; urgency=low
 
   * Lintian cleanups

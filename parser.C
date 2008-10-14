@@ -1514,10 +1514,6 @@ static NormPtr initializer_aggregate (Symbol s, NormPtr p)
 
 static NormPtr initializer_expr (Symbol s, NormPtr p)
 {
-	if (ISSTRING (CODE [p])) {
-		return p + 1;
-	}
-
 	subexpr tee [STDNEE];
 	tee [0].action = '=';
 	tee [0].voici.e = 1;
