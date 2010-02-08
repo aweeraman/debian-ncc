@@ -1,9 +1,10 @@
-ncc (2.7-4) unstable; urgency=low
+ncc (2.8-1) unstable; urgency=low
 
-  * Updated standards version to 3.8.0
-  * Fixed bug in parser.C (Closes: #499717) 
+  * New upstream release.
+  * debian/control (Depends): Added python and ${misc:Depends}.
+    (Standards-Version): Conforms to 3.8.4.
 
- -- Anuradha Weeraman <anuradha@gnuromancer.org>  Mon, 13 Oct 2008 20:19:06 -0400
+ -- NIIBE Yutaka <gniibe@fsij.org>  Mon, 08 Feb 2010 11:25:55 +0900
 
 ncc (2.7-3) unstable; urgency=low
 

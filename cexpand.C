@@ -148,33 +148,33 @@ void debug (const char *s, NormPtr i, int j)
 
 void prcode (NormPtr i, int j)
 {
-	printf ("#expression: ");
+	PRINTF ("#expression: ");
 	if (i < 0) i = 0;
 	if (i + j > C_Ntok) j = C_Ntok - i;
 	while (j--) {
 		bool b = ISSYMBOL (CODE [i]) || ISRESERVED (CODE [i]);
-		printf ("%s", expand (CODE [i++]));
+		PRINTF ("%s", expand (CODE [i++]));
 		if (b && (ISSYMBOL (CODE [i]) || ISRESERVED (CODE [i])))
-			printf (" ");
+			PRINTF (" ");
 	}
-	printf ("\n");
+	PRINTF ("\n");
 }
 
 void prcode (NormPtr i, int j, Symbol p[])
 {
-	printf ("#initialization expression: ");
+	PRINTF ("#initialization expression: ");
 	for (int c = 0; p [c] != ';'; c++)
-		printf ("%s", expand (p [c]));
-	printf (" = ");
+		PRINTF ("%s", expand (p [c]));
+	PRINTF (" = ");
 	if (i < 0) i = 0;
 	if (i + j > C_Ntok) j = C_Ntok - i;
 	while (j--) {
 		bool b = ISSYMBOL (CODE [i]) || ISRESERVED (CODE [i]);
-		printf ("%s", expand (CODE [i++]));
+		PRINTF ("%s", expand (CODE [i++]));
 		if (b && (ISSYMBOL (CODE [i]) || ISRESERVED (CODE [i])))
-			printf (" ");
+			PRINTF (" ");
 	}
-	printf ("\n");
+	PRINTF ("\n");
 }
 
 void prcode (NormPtr i, int j, Symbol p)

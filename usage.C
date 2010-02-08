@@ -64,11 +64,11 @@ void report (Symbol s, int frame, bool wrt, bool arr)
 		else new intNode (&printed);
 	}
 
-	if (frame == -1 ) printf (wrt ? (arr ? txt_evar_a : txt_evar) :
+	if (frame == -1 ) PRINTF (wrt ? (arr ? txt_evar_a : txt_evar) :
 				 arr ? txt_evar_ra : txt_evar_r, C_Syms [SYMBOLID (s)]);
-	else if (frame == 0 ) printf (wrt ? (arr ? txt_gvar_a : txt_gvar) :
+	else if (frame == 0 ) PRINTF (wrt ? (arr ? txt_gvar_a : txt_gvar) :
 				 arr ? txt_gvar_ra : txt_gvar_r, C_Syms [SYMBOLID (s)]);
-	else printf (wrt ? (arr ? txt_memb_a : txt_memb) : arr ? txt_memb_ra : txt_memb_r, 
+	else PRINTF (wrt ? (arr ? txt_memb_a : txt_memb) : arr ? txt_memb_ra : txt_memb_r, 
 				 structname (struct_by_name (frame)), C_Syms [SYMBOLID (s)]);
 	if (arr) report (s, frame, false, false);
 }
@@ -78,7 +78,7 @@ static Symbol current_function;
 void newfunction (Symbol s)
 {
 	current_function = s;
-	printf (txt_func, C_Syms [SYMBOLID (s)]);
+	PRINTF (txt_func, C_Syms [SYMBOLID (s)]);
 	if (printed.root) {
 		delete printed.root;
 		printed.root = NULL;
@@ -102,14 +102,14 @@ void report_call (Symbol s, bool pointer)
 		if (printed_function.intFind (s + func)) return;
 		else new intNode (&printed_function);
 	if (func)
-		printf (farg_named_call, C_Syms [SYMBOLID (func)], C_Syms [SYMBOLID (s)]);
+		PRINTF (farg_named_call, C_Syms [SYMBOLID (func)], C_Syms [SYMBOLID (s)]);
 	else
-		printf (pointer ? txt_fpcall : txt_fcall, C_Syms [SYMBOLID (s)]);
+		PRINTF (pointer ? txt_fpcall : txt_fcall, C_Syms [SYMBOLID (s)]);
 }
 
 void report_callback (Symbol rec, Symbol s)
 {
-	printf (txt_fcallback, structname (rec), C_Syms [SYMBOLID (s)]);
+	PRINTF (txt_fcallback, structname (rec), C_Syms [SYMBOLID (s)]);
 }
 
 struct argnameassign { Symbol s1, s2; int argi; };
@@ -126,16 +126,16 @@ static void stor_named_conv (Symbol f, Symbol a, int n)
 void report_named_convert ()
 {
 	int i;
-	if (arg_names.nr) printf ("\n");
+	if (arg_names.nr) PRINTF ("\n");
 	for (i = 0; i < arg_names.nr; i++)
-		printf (farg_call_redirect, C_Syms [arg_names.x [i].s1], C_Syms [arg_names.x [i].s2],
+		PRINTF (farg_call_redirect, C_Syms [arg_names.x [i].s1], C_Syms [arg_names.x [i].s2],
 			C_Syms [arg_names.x [i].s1], arg_names.x [i].argi);
 }
 
 void report_fargcall (int a, Symbol s)
 {
 	stor_named_conv (current_function, s, a);
-	printf (farg_named_call, C_Syms [SYMBOLID (current_function)], C_Syms [SYMBOLID (s)]);
+	PRINTF (farg_named_call, C_Syms [SYMBOLID (current_function)], C_Syms [SYMBOLID (s)]);
 }
 
 struct fptrassign { Symbol s1, s2, m1, m2, fn, fn1; bool sptr, a1, a2; };
@@ -180,37 +180,37 @@ void report_fptrs ()
 	for (i = 0; i < fptr_assignments.nr; i++) {
 		fptrassign fp = fptr_assignments.x [i];
 
-		printf ("\nD: ");
+		PRINTF ("\nD: ");
 		if (fp.m1 == -1 && fp.fn1 != -1)
-			printf ("%s/", C_Syms [SYMBOLID (fp.fn1)]);
+			PRINTF ("%s/", C_Syms [SYMBOLID (fp.fn1)]);
 		else if (fp.m1 != -1)
-			printf ("*%s.", structname (fp.s1));
-		else printf ("*");
-		printf ("%s", C_Syms [fp.m1 == -1 ? SYMBOLID (fp.s1) : SYMBOLID (fp.m1)]);
-		if (fp.a1) printf ("[]");
-		printf ("()\n");
+			PRINTF ("*%s.", structname (fp.s1));
+		else PRINTF ("*");
+		PRINTF ("%s", C_Syms [fp.m1 == -1 ? SYMBOLID (fp.s1) : SYMBOLID (fp.m1)]);
+		if (fp.a1) PRINTF ("[]");
+		PRINTF ("()\n");
 		
-		printf ("F: ");
+		PRINTF ("F: ");
 		if (fp.m2 == -1 && fp.fn != -1)
-			printf ("%s/", C_Syms [SYMBOLID (fp.fn)]);
+			PRINTF ("%s/", C_Syms [SYMBOLID (fp.fn)]);
 		else if (fp.m2 == -1 && fp.fn == -1 && fp.sptr)
-			printf ("*");
+			PRINTF ("*");
 		else if (fp.m2 != -1)
-			printf ("*%s.", structname (fp.s2));
-		printf ("%s", C_Syms [fp.m2 == -1 ? SYMBOLID (fp.s2) : SYMBOLID (fp.m2)]);
-		if (fp.a2) printf ("[]");
-		printf ("()\n");
+			PRINTF ("*%s.", structname (fp.s2));
+		PRINTF ("%s", C_Syms [fp.m2 == -1 ? SYMBOLID (fp.s2) : SYMBOLID (fp.m2)]);
+		if (fp.a2) PRINTF ("[]");
+		PRINTF ("()\n");
 	}
 }
 
 void report_virtual ()
 {
-	printf (txt_virt);
+	PRINTF (txt_virt);
 }
 
 void report_error ()
 {
-	printf (txt_error);
+	PRINTF (txt_error);
 }
 
 struct fargsave { Symbol f, f2, s, lf; int ia, ia2; bool ptr; };
@@ -250,22 +250,22 @@ void report_fargval_locf (Symbol f, int ia, Symbol f2, Symbol l)
 void report_argument_calls ()
 {
 	int i;
-	if (farg_saves.nr) printf ("\n");
+	if (farg_saves.nr) PRINTF ("\n");
 	for (i = 0; i < farg_saves.nr; i++)
 		if (farg_saves.x [i].s != -1)
-		printf (txt_membargval, C_Syms [SYMBOLID (farg_saves.x [i].f)],
+		PRINTF (txt_membargval, C_Syms [SYMBOLID (farg_saves.x [i].f)],
 			farg_saves.x [i].ia, C_Syms [SYMBOLID (farg_saves.x [i].s)],
 			C_Syms [SYMBOLID (farg_saves.x [i].f2)]);
 		else if (farg_saves.x [i].lf != -1)
-		printf (txt_argvalfl, C_Syms [SYMBOLID (farg_saves.x [i].f)],
+		PRINTF (txt_argvalfl, C_Syms [SYMBOLID (farg_saves.x [i].f)],
 			farg_saves.x [i].ia, C_Syms [SYMBOLID (farg_saves.x [i].lf)],
 			C_Syms [SYMBOLID (farg_saves.x [i].f2)]);
 		else if (farg_saves.x [i].ia2 == -1)
-		printf (farg_saves.x [i].ptr ? txt_argvalf : txt_argval,
+		PRINTF (farg_saves.x [i].ptr ? txt_argvalf : txt_argval,
 			C_Syms [SYMBOLID (farg_saves.x [i].f)],
 			farg_saves.x [i].ia,  C_Syms [SYMBOLID (farg_saves.x [i].f2)]);
 		else
-		printf (txt_argvalargval, C_Syms [SYMBOLID (farg_saves.x [i].f)],
+		PRINTF (txt_argvalargval, C_Syms [SYMBOLID (farg_saves.x [i].f)],
 			farg_saves.x [i].ia,  C_Syms [SYMBOLID (farg_saves.x [i].f2)],
 			farg_saves.x [i].ia2);
 }

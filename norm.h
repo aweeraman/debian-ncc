@@ -86,6 +86,7 @@
 #define RESERVED_extern			702
 #define RESERVED_inline			703
 #define RESERVED___inline__		703
+#define RESERVED___inline		703
 #define RESERVED_register		704
 #define RESERVED_static			705
 #define RESERVED_typedef		706

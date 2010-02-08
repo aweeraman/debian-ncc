@@ -1181,15 +1181,22 @@ void txtviewer (char *title, char *txt, unsigned int l, bool colored)
 	def_prog_mode();		/* Save the tty modes		  */
 	endwin();			/* End curses mode temporarily	  */
 	if (colored) {
+		unsigned int h = 0, *ip = (unsigned int*) title;
 		char *tmpc, cmd [100];
-		FILE *f = fopen (tmpc = ".tmp.c", "w");
-		if (!f) 
-			f = fopen (tmpc = "/tmp/.tmp.c", "w");
+		char tmpname [100];
+
+		int i;
+		for (i = 0; i < strlen (title) / 4; i++)
+			h ^= *ip++;
+		sprintf (tmpname, "/tmp/nccnav-tmp%x.c", h);
+
+		FILE *f = fopen (tmpc = tmpname, "w");
 		fputs (title, f); fputc ('\n', f);
 		fputs (txt, f);
 		fclose (f);
 		sprintf (cmd, COLOR_VIEWER" %s", tmpc);
 		system (cmd);
+		unlink (tmpc);
 	} else {
 		FILE *p = popen (svr, "w");
 		if (!p) source_viewer_fatal ();

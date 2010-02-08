@@ -3,14 +3,14 @@ Section: devel
 Priority: optional
 Maintainer: Anuradha Weeraman <anuradha@gnuromancer.org>
 Build-Depends: debhelper (>= 5.0.0), libncurses5-dev
-Standards-Version: 3.8.0
+Standards-Version: 3.8.4
 Uploaders: NIIBE Yutaka <gniibe@fsij.org>
 Homepage: http://students.ceid.upatras.gr/~sxanth/ncc/
 DM-Upload-Allowed: yes
 
 Package: ncc
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, python
 Description: C source code analyzer
  A small, extensible tool that provides program analysis data of C
  source code. This data can be used to analyze the function call flow

@@ -517,12 +517,12 @@ void open_compound ()
 void functions_of_file ()
 {
 	int prevfile = -1;
-	printf ("\n\n");
+	PRINTF ("\n\n");
 	for (int i = 0; i < functions.nr; i++) {
 		if (cfile_of (functions.x [i].body) != prevfile)
-			printf ("\nP: %s\n", C_Files [prevfile = 
+			PRINTF ("\nP: %s\n", C_Files [prevfile = 
 			 cfile_of (functions.x [i].body)].file);
-		printf ("L: %s() %i %i\n",
+		PRINTF ("L: %s() %i %i\n",
 			 expand (functions.x [i].name),
 			 cline_of (functions.x [i].txt),
 			 cline_of (functions.x [i].ends));
@@ -749,14 +749,14 @@ void structs_of_file ()
 {
 	int i, n = regions.nr ();
 	int prevfile = -1;
-	printf ("\n");
+	PRINTF ("\n");
 
 	for (i = 0; i < n; i++)
 		if (regions [i].used && regions [i].dcll) {
 			if (cfile_of (regions [i].dcls) != prevfile)
-				printf ("\nP: %s\n", C_Files [prevfile = 
+				PRINTF ("\nP: %s\n", C_Files [prevfile = 
 				 cfile_of (regions [i].dcls)].file);
-			printf ("Y: %s %i %i\n",
+			PRINTF ("Y: %s %i %i\n",
 				 expand (struct_by_name (i)),
 				 cline_of (regions [i].dcls),
 				 cline_of (regions [i].dcls + regions [i].dcll));
@@ -1103,31 +1103,31 @@ void show_lookups ()
 	int i;
 
 	for (i = 0; i < C_Nsyms; i++) {
-		printf ("* * * * * Symbol [%s]\n", C_Syms [i]);
+		PRINTF ("* * * * * Symbol [%s]\n", C_Syms [i]);
 		for (L = lookup_table [i]; L; L = L->next) {
-		printf ("- Inside %i: ", L->cp);
+		PRINTF ("- Inside %i: ", L->cp);
 		switch (L->kind) {
 		case RECORD:
-			printf ("Record no %i\n", L->info.rp);
+			PRINTF ("Record no %i\n", L->info.rp);
 			break;
 		case ENUMTAG:
-			printf ("Enumeration tag\n");
+			PRINTF ("Enumeration tag\n");
 			break;
 		case TYPEDEF:
-			printf ("typedef\n");
+			PRINTF ("typedef\n");
 			printtype (L->info.tdf);
 			break;
 		case OBJECT:
 		case EOBJECT:
-			printf ("variable %i\n", L->placement);
+			PRINTF ("variable %i\n", L->placement);
 			printtype (L->info.tdf);
 			break;
 		case ENUMCONST:
-			printf ("enumeration constant %i\n", L->info.eval);
+			PRINTF ("enumeration constant %i\n", L->info.eval);
 			break;
 		case EFUNCTION:
 		case IFUNCTION:
-			printf ("function %i\n", L->placement);
+			PRINTF ("function %i\n", L->placement);
 			printtype (L->info.tdf);
 			break;
 		default:;
@@ -1221,10 +1221,10 @@ Symbol *mk_dclstr (Symbol s)
 	aeqn A (s);
 	if (0) {
 		int i;
-		printf ("[XYZZY]: ");
+		PRINTF ("[XYZZY]: ");
 		for (i = 0; A.dclstr [i] != -1; i++)
-			printf ("%s", expand (A.dclstr[i]));
-		printf ("\t\t(txtlen=%i,i=%s)\n", i,expand(s));
+			PRINTF ("%s", expand (A.dclstr[i]));
+		PRINTF ("\t\t(txtlen=%i,i=%s)\n", i,expand(s));
 	}
 	return A.dclstr;
 }
@@ -1440,10 +1440,10 @@ void dcle::printexpr ()
 {
 	// debug routine
 	int i;
-	printf ("XYZZY: ");
+	PRINTF ("XYZZY: ");
 	for (i=0;pexpr[i]!=-1;i++)
-		printf ("%s", expand (pexpr [i]));
-	printf ("\t\t%i\n", i);
+		PRINTF ("%s", expand (pexpr [i]));
+	PRINTF ("\t\t%i\n", i);
 }
 /*****************************************************************************
 
@@ -1452,10 +1452,10 @@ void dcle::printexpr ()
 void showdb ()
 {
 //show_lookups ();
-printf ("#%i types\n", types.nr);
-printf ("#%i arglists\n", arglists.nr);
-printf ("#%i regions\n", regions.nr ());
-printf ("#%i function definitions\n", functions.nr);
+PRINTF ("#%i types\n", types.nr);
+PRINTF ("#%i arglists\n", arglists.nr);
+PRINTF ("#%i regions\n", regions.nr ());
+PRINTF ("#%i function definitions\n", functions.nr);
 
 }
 
