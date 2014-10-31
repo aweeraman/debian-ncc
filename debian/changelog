@@ -1,3 +1,12 @@
+ncc (2.8-2) unstable; urgency=low
+
+  * Added gengraph to /usr/bin and associated man page
+  * Updates to man pages
+  * Fixed lintian warnings
+  * Removed scripts from /usr/share/doc/ncc
+
+ -- Anuradha Weeraman (anu) <aweeraman@gmail.com>  Sat, 01 Nov 2014 01:09:18 +0530
+
 ncc (2.8-1) unstable; urgency=low
 
   * New upstream release.

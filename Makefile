@@ -7,18 +7,20 @@ BINDIR = ${DESTDIR}/bin
 MANDIR = ${DESTDIR}/share/man
 INCLUDEDIR = ${DESTDIR}/include
 NOGNU = /usr/include/nognu
+SHAREDIR = ${DESTDIR}/share/ncc
 
 #
 
 CFLAGS = $(LCFLAGS) -c
-
+LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 
 tout: objdir/nccgen nccnav/nccnav
 	@echo Salut.
 
 install: tout
 	cp objdir/nccgen $(BINDIR)/nccgen
-	cp scripts/nccstrip2.py $(BINDIR)/nccstrip2.py
+	mkdir $(SHAREDIR)
+	cp scripts/nccstrip2.py $(SHAREDIR)/nccstrip2.py
 	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccar
 	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccld
 	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccc++
@@ -38,7 +40,7 @@ nccnav/nccnav: nccnav/nccnav.C
 	@cd nccnav && make
 
 objdir/nccgen: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
-	$(CC) $(LCFLAGS) main.C objdir/*.o -o objdir/nccgen 
+	$(CC) $(LCFLAGS) $(LDFLAGS) main.C objdir/*.o -o objdir/nccgen 
 
 objdir/cexpand.o: cexpand.C
 	$(CC) $(CFLAGS) cexpand.C
