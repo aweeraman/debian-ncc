@@ -1,9 +1,9 @@
 Source: ncc
 Section: devel
 Priority: optional
-Maintainer: Anuradha Weeraman (anu) <aweeraman@gmail.com>
-Build-Depends: debhelper (>= 9), libncurses5-dev
-Standards-Version: 3.9.6
+Maintainer: Anuradha Weeraman <aweeraman@gmail.com>
+Build-Depends: debhelper (>= 9), libncurses-dev
+Standards-Version: 4.4.0
 Uploaders: NIIBE Yutaka <gniibe@fsij.org>
 Homepage: http://students.ceid.upatras.gr/~sxanth/ncc/
 

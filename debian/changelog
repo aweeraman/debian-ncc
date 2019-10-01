@@ -1,3 +1,12 @@
+ncc (2.8-3) unstable; urgency=low
+
+  * Changed dependency to use libncurses-dev
+  * Upgraded Standards-Version to 4.4.0
+  * Fixed missing debian/source/format warning
+  * Upgraded debian/compat to 9
+
+ -- Anuradha Weeraman <aweeraman@gmail.com>  Tue, 01 Oct 2019 05:38:00 -0500
+
 ncc (2.8-2.1) UNRELEASED; urgency=medium
 
   * Non-maintainer upload.
