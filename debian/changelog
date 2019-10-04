@@ -1,3 +1,10 @@
+ncc (2.8-4) unstable; urgency=low
+
+  * Converted source format to 3.0 (quilt)
+  * Fixed lintian warnings 
+
+ -- Anuradha Weeraman <aweeraman@gmail.com>  Fri, 04 Oct 2019 14:45:00 -0500
+
 ncc (2.8-3) unstable; urgency=low
 
   * Changed dependency to use libncurses-dev

@@ -2,12 +2,6 @@
 
 CFLAGS = $(shell dpkg-buildflags --get CFLAGS)
 
-ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-	CFLAGS += -O0
-else
-	CFLAGS += -O2
-endif
-
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
@@ -26,25 +20,23 @@ build-stamp: configure-stamp
 	touch build-stamp
 
 clean:
+	dh_prep
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp configure-stamp
-
 	rm -f debian/ncc.substvars
 	rm -f debian/files
 	rm -f scripts/gengraph scripts/gengraph.1
-
 	[ ! -f Makefile ] || $(MAKE) distclean
-
 	dh_clean
 
 install: build
+	dh_prep
 	dh_testdir
 	dh_testroot
-	dh_clean -k
 	dh_installdirs
-
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/ncc/usr
+	dh_clean
 
 
 binary-indep: build install

@@ -47,7 +47,7 @@ static void openout (char *f, char *mode = "w")
 	if (!f) return;
 	char *c = (char*) alloca (strlen (f) + sizeof OUTPUT_EXT);
 	report_stream = fopen (strcat (strcpy (c, f), OUTPUT_EXT), mode);
-	fprintf (stderr, "nccgen: output file is ["COLS"%s"COLE"]\n", c);
+	fprintf (stderr, "ncc: output file is ["COLS"%s"COLE"]\n", c);
 }
 
 static void stripout (char *f)
@@ -55,7 +55,7 @@ static void stripout (char *f)
 	if (report_stream != stdout) {
 		fclose (report_stream);
 		char tmp [1024];
-		sprintf (tmp, "python /usr/share/ncc/nccstrip2.py %s"OUTPUT_EXT" %s"OUTPUT_EXT, f, f);
+		sprintf (tmp, "nccstrip2.py %s"OUTPUT_EXT" %s"OUTPUT_EXT, f, f);
 		system (tmp);
 	}
 	report_stream = stdout;
@@ -86,7 +86,7 @@ static void LINK (char **obj, int objn)
 		strcat (strcpy (ncobj, obj [i]), OUTPUT_EXT);
 		load_file L (ncobj);
 		if (L.success == ZC_OK) {
-			fprintf (stderr, "nccgen: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
+			fprintf (stderr, "ncc: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
 				 ncobj, L.len);
 			PRINTF (NCCOBJ"%s\n", ncobj);
 			CATFILE (L.data, L.len, report_stream);
@@ -157,7 +157,7 @@ static void nccar_x (int argc, char **argv)
 			n [strlen (n) - 1] = 0;
 			if (OUTF) fclose (OUTF);
 			OUTF = fopen (n, "w");
-			fprintf (stderr, "nccgen: extract ["COLS"%s"COLE"]\n", n);
+			fprintf (stderr, "ncc: extract ["COLS"%s"COLE"]\n", n);
 		}
 		if (OUTF)
 			fputs (tmp, OUTF);
@@ -459,11 +459,11 @@ void preproc (int argc, char**argv)
 			LINK (objfiles, objfileno);
 			if (ofile)
 				stripout (ofile);
-		} else fprintf (stderr, "nccgen: No C source file\n");
+		} else fprintf (stderr, "ncc: No C source file\n");
 		exit (0);
 	}
 	if (dontdoit) {
-		fprintf (stderr, "nccgen: '-E'. Won't do it...\n");
+		fprintf (stderr, "ncc: '-E'. Won't do it...\n");
 		exit (0);
 	}
 	if (spp) {

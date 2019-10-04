@@ -1,0 +1,323 @@
+Description: Debian-related changes
+ This patch includes the Debian-related changes with respect to
+ documentation (man pages) and re-factoring to resolve Debian RC
+ due to naming conflict with another package. This package is
+ currently unmaintained upstream.
+Author: Anuradha Weeraman <aweeraman@gmail.com>
+Origin: other
+Last-Update: 2019-10-04
+
+--- ncc-2.8.orig/Makefile
++++ ncc-2.8/Makefile
+@@ -2,43 +2,45 @@
+ # these are set by config
+ CC = g++
+ DESTDIR ?= /usr
+-LCFLAGS = -g -O2
++LCFLAGS = -g -O2 -Wno-write-strings
+ BINDIR = ${DESTDIR}/bin
+ MANDIR = ${DESTDIR}/share/man
+ INCLUDEDIR = ${DESTDIR}/include
+ NOGNU = /usr/include/nognu
++SHAREDIR = ${DESTDIR}/share/ncc
+ 
+ #
+ 
+ CFLAGS = $(LCFLAGS) -c
++LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
+ 
+-
+-tout: objdir/ncc nccnav/nccnav
++tout: objdir/nccgen nccnav/nccnav
+ 	@echo Salut.
+ 
+ install: tout
+-	cp objdir/ncc $(BINDIR)/ncc
+-	cp scripts/nccstrip2.py $(BINDIR)/nccstrip2.py
+-	ln -sf $(BINDIR)/ncc $(BINDIR)/nccar
+-	ln -sf $(BINDIR)/ncc $(BINDIR)/nccld
+-	ln -sf $(BINDIR)/ncc $(BINDIR)/nccc++
+-	ln -sf $(BINDIR)/ncc $(BINDIR)/nccg++
++	cp objdir/nccgen $(BINDIR)/nccgen
++	mkdir $(SHAREDIR)
++	cp scripts/nccstrip2.py $(SHAREDIR)/nccstrip2.py
++	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccar
++	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccld
++	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccc++
++	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccg++
+ 	cp nccnav/nccnav $(BINDIR)/nccnav
+ 	ln -fs $(BINDIR)/nccnav $(BINDIR)/nccnavi
+-	cp ncc.1 $(MANDIR)/man1
++	cp ncc.1 $(MANDIR)/man1/nccgen.1
+ 	cp nccnav/nccnav.1 $(MANDIR)/man1
+ 	cp doc/nognu $(INCLUDEDIR)
+ 
+ uninstall:
+-	rm -f $(BINDIR)/ncc $(BINDIR)/nccnav $(BINDIR)/nccnavi $(MANDIR)/man1/ncc.1 $(INCLUDEDIR)/nognu
++	rm -f $(BINDIR)/nccgen $(BINDIR)/nccnav $(BINDIR)/nccnavi $(MANDIR)/man1/nccgen.1 $(INCLUDEDIR)/nognu
+ 	rm -f $(BINDIR)/nccar $(BINDIR)/nccld $(BINDIR)/nccc++ $(BINDIR)/nccg++
+ 
+ nccnav/nccnav: nccnav/nccnav.C
+ 	@echo Compiling nccnav viewer.
+ 	@cd nccnav && make
+ 
+-objdir/ncc: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
+-	$(CC) $(LCFLAGS) main.C objdir/*.o -o objdir/ncc 
++objdir/nccgen: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
++	$(CC) $(LCFLAGS) $(LDFLAGS) main.C objdir/*.o -o objdir/nccgen 
+ 
+ objdir/cexpand.o: cexpand.C
+ 	$(CC) $(CFLAGS) cexpand.C
+@@ -87,5 +89,5 @@ clean:
+ 	rm -f objdir/*.o
+ 
+ distclean:
+-	rm -f objdir/* objdir/ncc
++	rm -f objdir/* objdir/nccgen
+ 	@cd nccnav && make clean
+--- ncc-2.8.orig/ncc.1
++++ ncc-2.8/ncc.1
+@@ -1,10 +1,10 @@
+-.TH ncc 1 "8 Mar 2003" "Linux" "ncc"
++.TH nccgen 1 "8 Mar 2003" "Linux" "nccgen"
+ .SH NAME
+-ncc \- source code analysis
++nccgen \- source code analysis
+ .SH SYNOPSIS
+-ncc file.c
++nccgen \fIfile.c\fR
+ .SH DESCRIPTION
+-.B ncc
++.B nccgen
+ is a program that can help you hack/study the source code of C programs.
+ It will report which functions call which other functions, which functions
+ are called by other functions and what global variables and members of
+@@ -12,7 +12,7 @@ structures are used by functions. This i
+ a program and eventually hack it.
+ .SH USAGE
+ To use
+-.B ncc
++.B nccgen
+ find the 
+ .B Makefile
+ of the program you want to analyse. In the
+@@ -21,7 +21,7 @@ locate  the line which sets the C compil
+ usually something like
+ .B CC = gcc
+ and you must change it to
+-.B CC = ncc -ncgcc -ncld -ncfabs.
++.B CC = nccgen -ncgcc -ncld -ncfabs.
+ Then compile the application. It may be useful to also replace
+ .B AR = ar
+ with
+@@ -32,7 +32,7 @@ with
+ .B LD = nccld
+ to link nccout object files.
+ .SH OUTPUT
+-.B ncc
++.B nccgen
+ will produce a file with
+ .B nccout
+ extension for every C file analysed.
+--- ncc-2.8.orig/nccnav/Makefile
++++ ncc-2.8/nccnav/Makefile
+@@ -1,12 +1,13 @@
+ 
+ CC = g++
+ LCFLAGS = -Wall -g
+-CFLAGS = $(LCFLAGS) -c -g
++CFLAGS = $(LCFLAGS) -c -g -Wno-write-strings
++LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
+ 
+ OBJDIR = ../objdir
+ 
+ $(OBJDIR)/nccnav: nccnav.C $(OBJDIR)/dbstree.o $(OBJDIR)/inttree.o
+-	$(CC) -g nccnav.C -I.. -lncurses -o nccnav $(OBJDIR)/dbstree.o $(OBJDIR)/inttree.o
++	$(CC) $(LDFLAGS) -g -Wno-write-strings nccnav.C -I.. -lncurses -o nccnav $(OBJDIR)/dbstree.o $(OBJDIR)/inttree.o
+ 
+ $(OBJDIR)/dbstree.o: ../dbstree.[Ch]
+ 	$(CC) $(CFLAGS) ../dbstree.C -c
+--- ncc-2.8.orig/nccnav/nccnav.1
++++ ncc-2.8/nccnav/nccnav.1
+@@ -16,7 +16,7 @@
+ .\" .sp <n>    insert n+1 empty lines
+ .\" for manpage-specific macros, see man(7)
+ .SH NAME
+-nccnav, nccnavi \- explore the output of ncc on a text-mode console
++nccnav, nccnavi \- explore the output of nccgen on a text-mode console
+ .SH SYNOPSIS
+ .B nccnav
+ .RI [ Code.map ]
+@@ -26,7 +26,7 @@ nccnav, nccnavi \- explore the output of
+ .SH DESCRIPTION
+ This manual page documents briefly the
+ .B nccnav
+-command which can be used to browse the output generated by ncc
++command which can be used to browse the output generated by nccgen
+ on a set of C / C++ files.
+ 
+ .SH COMMANDS (Mode 1)
+@@ -113,7 +113,7 @@ Pressing <SPACE> on:
+ 	-ncfabs is rather useful.
+ 
+ 	Note that if a function reports to be defined in more than one
+-	files, this will probably fail.  This happens because ncc does
++	files, this will probably fail.  This happens because nccgen does
+ 	not distinguish different static functions with the same name.
+ 	They are considered the same thing and their resources are
+ 	mixed in nccnav.  Currently, if nccnav detects more than one
+@@ -155,7 +155,7 @@ below it all the functions called by it.
+ with the UP/DOWN arrows.
+ 
+ <enter> or RIGHT will expand a new pop-up for the current function.
+-'q' or LEFT will close the current pop-up and activate the previous one.
++\fBq\fR or LEFT will close the current pop-up and activate the previous one.
+ SPACE is available to view the source code.
+ 
+ BACKSPACE will close all the popups and return to MODE 2.
+@@ -169,19 +169,19 @@ screens. <enter> on one of them will jum
+ key will exit the HISTORY MODE.
+ 
+ .SH EXAMPLE
+-Supposing you've compiled the linux kernel with ncc.
++Supposing you've compiled the linux kernel with nccgen.
+ Collecting all the .nccout files can be done with :
+ 
+ .TP
+ .B
+-find . -name \*.nccout | xargs cat > kernel.map
++find . -name \\*.nccout | xargs cat > kernel.map
+ 
+ .TP
+ You can use pathremover to truncate long paths in `kernel.map'.
+ 
+ .TP
+ .B
+-find . -name \*.nccout | xargs cat | pathremover /mnt/src/hacks/linux-2.4.10/ > kernel.map
++find . -name \\*.nccout | xargs cat | pathremover /mnt/src/hacks/linux-2.4.10/ > kernel.map
+ 
+ .TP
+ Then, that's viewed with:
+@@ -191,15 +191,12 @@ Then, that's viewed with:
+ nccnav kernel.map
+ 
+ .TP
+-For more information on using ncc on the Linux kernel, please refer to:
++For more information on using nccgen on the Linux kernel, please refer to:
+ .TP
+ .B
+ 	/usr/share/doc/ncc/hacking.LINUX-KERNEL
+ 
+ .SH SEE ALSO
+-.BR ncc (1),
+-.BR gengraph.py (1),
+-.BR nccstrip.py (1),
+-.BR pathremover (1),
++.BR nccgen (1)
+ .SH AUTHOR
+ nccnav was written by Stelios Xanthakis <sxanth@ceid.upatras.gr>.
+--- ncc-2.8.orig/nccnav/nccnav.C
++++ ncc-2.8/nccnav/nccnav.C
+@@ -330,7 +330,7 @@ void do_replacements ()
+ //
+ 
+ struct file_chunk {
+-	unsigned int start, end;
++	int start, end;
+ } NoChunk = { ~0, ~0 };
+ 
+ class lnnode : public intNode
+--- ncc-2.8.orig/preproc.C
++++ ncc-2.8/preproc.C
+@@ -47,7 +47,7 @@ static void openout (char *f, char *mode
+ 	if (!f) return;
+ 	char *c = (char*) alloca (strlen (f) + sizeof OUTPUT_EXT);
+ 	report_stream = fopen (strcat (strcpy (c, f), OUTPUT_EXT), mode);
+-	fprintf (stderr, "ncc: output file is ["COLS"%s"COLE"]\n", c);
++	fprintf (stderr, "nccgen: output file is ["COLS"%s"COLE"]\n", c);
+ }
+ 
+ static void stripout (char *f)
+@@ -55,7 +55,7 @@ static void stripout (char *f)
+ 	if (report_stream != stdout) {
+ 		fclose (report_stream);
+ 		char tmp [1024];
+-		sprintf (tmp, "nccstrip2.py %s"OUTPUT_EXT" %s"OUTPUT_EXT, f, f);
++		sprintf (tmp, "python /usr/share/ncc/nccstrip2.py %s"OUTPUT_EXT" %s"OUTPUT_EXT, f, f);
+ 		system (tmp);
+ 	}
+ 	report_stream = stdout;
+@@ -86,7 +86,7 @@ static void LINK (char **obj, int objn)
+ 		strcat (strcpy (ncobj, obj [i]), OUTPUT_EXT);
+ 		load_file L (ncobj);
+ 		if (L.success == ZC_OK) {
+-			fprintf (stderr, "ncc: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
++			fprintf (stderr, "nccgen: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
+ 				 ncobj, L.len);
+ 			PRINTF (NCCOBJ"%s\n", ncobj);
+ 			CATFILE (L.data, L.len, report_stream);
+@@ -157,7 +157,7 @@ static void nccar_x (int argc, char **ar
+ 			n [strlen (n) - 1] = 0;
+ 			if (OUTF) fclose (OUTF);
+ 			OUTF = fopen (n, "w");
+-			fprintf (stderr, "ncc: extract ["COLS"%s"COLE"]\n", n);
++			fprintf (stderr, "nccgen: extract ["COLS"%s"COLE"]\n", n);
+ 		}
+ 		if (OUTF)
+ 			fputs (tmp, OUTF);
+@@ -459,11 +459,11 @@ void preproc (int argc, char**argv)
+ 			LINK (objfiles, objfileno);
+ 			if (ofile)
+ 				stripout (ofile);
+-		} else fprintf (stderr, "ncc: No C source file\n");
++		} else fprintf (stderr, "nccgen: No C source file\n");
+ 		exit (0);
+ 	}
+ 	if (dontdoit) {
+-		fprintf (stderr, "ncc: '-E'. Won't do it...\n");
++		fprintf (stderr, "nccgen: '-E'. Won't do it...\n");
+ 		exit (0);
+ 	}
+ 	if (spp) {
+--- ncc-2.8.orig/scripts/gengraph.py.1
++++ ncc-2.8/scripts/gengraph.py.1
+@@ -2,7 +2,7 @@
+ .\" First parameter, NAME, should be all caps
+ .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+ .\" other parameters are allowed: see man(7), man(1)
+-.TH GENGRAPH.PY 1 "September 10, 2006"
++.TH gengraph 1 "November 1, 2014"
+ .\" Please adjust this date whenever revising the manpage.
+ .\"
+ .\" Some roff macros, for reference:
+@@ -16,9 +16,9 @@
+ .\" .sp <n>    insert n+1 empty lines
+ .\" for manpage-specific macros, see man(7)
+ .SH NAME
+-gengraph.py \- Produces a call graph in dot format from an ncc-generated file.
++gengraph \- Produces a call graph in dot format from an ncc-generated file.
+ .SH SYNOPSIS
+-.B gengraph.py
++.B gengraph
+ .RI [options]
+ .RI <nccout>
+ .RI <function>
+@@ -45,14 +45,14 @@ gengraph.py \- Produces a call graph in
+ .TP
+ .BI
+ -s | --show: show function but ignore sub-functions
+-.SH SAMPLE USAGE
++.SH USAGE
+ 
+ .B
+-gengraph.py -i "exit strlen" nccout main | dot -Tsvg -o func.svg
++gengraph -i "exit strlen" nccout main | dot -Tsvg -o func.svg
+ 
+ .B
+-gengraph.py -i "exit strlen" nccout main | springgraph > output.png
++gengraph -i "exit strlen" nccout main | springgraph > output.png
+ 
+ .SH SEE ALSO
+-.BR ncc (1),
++.BR nccgen (1),
+ .BR nccnav (1)

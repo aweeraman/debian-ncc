@@ -1,13 +1,12 @@
 
 CC = g++
 LCFLAGS = -Wall -g
-CFLAGS = $(LCFLAGS) -c -g -Wno-write-strings
-LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
+CFLAGS = $(LCFLAGS) -c -g
 
 OBJDIR = ../objdir
 
 $(OBJDIR)/nccnav: nccnav.C $(OBJDIR)/dbstree.o $(OBJDIR)/inttree.o
-	$(CC) $(LDFLAGS) -g -Wno-write-strings nccnav.C -I.. -lncurses -o nccnav $(OBJDIR)/dbstree.o $(OBJDIR)/inttree.o
+	$(CC) -g nccnav.C -I.. -lncurses -o nccnav $(OBJDIR)/dbstree.o $(OBJDIR)/inttree.o
 
 $(OBJDIR)/dbstree.o: ../dbstree.[Ch]
 	$(CC) $(CFLAGS) ../dbstree.C -c

@@ -2,45 +2,43 @@
 # these are set by config
 CC = g++
 DESTDIR ?= /usr
-LCFLAGS = -g -O2 -Wno-write-strings
+LCFLAGS = -g -O2
 BINDIR = ${DESTDIR}/bin
 MANDIR = ${DESTDIR}/share/man
 INCLUDEDIR = ${DESTDIR}/include
 NOGNU = /usr/include/nognu
-SHAREDIR = ${DESTDIR}/share/ncc
 
 #
 
 CFLAGS = $(LCFLAGS) -c
-LDFLAGS = $(shell dpkg-buildflags --get LDFLAGS)
 
-tout: objdir/nccgen nccnav/nccnav
+
+tout: objdir/ncc nccnav/nccnav
 	@echo Salut.
 
 install: tout
-	cp objdir/nccgen $(BINDIR)/nccgen
-	mkdir $(SHAREDIR)
-	cp scripts/nccstrip2.py $(SHAREDIR)/nccstrip2.py
-	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccar
-	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccld
-	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccc++
-	ln -sf $(BINDIR)/nccgen $(BINDIR)/nccg++
+	cp objdir/ncc $(BINDIR)/ncc
+	cp scripts/nccstrip2.py $(BINDIR)/nccstrip2.py
+	ln -sf $(BINDIR)/ncc $(BINDIR)/nccar
+	ln -sf $(BINDIR)/ncc $(BINDIR)/nccld
+	ln -sf $(BINDIR)/ncc $(BINDIR)/nccc++
+	ln -sf $(BINDIR)/ncc $(BINDIR)/nccg++
 	cp nccnav/nccnav $(BINDIR)/nccnav
 	ln -fs $(BINDIR)/nccnav $(BINDIR)/nccnavi
-	cp ncc.1 $(MANDIR)/man1/nccgen.1
+	cp ncc.1 $(MANDIR)/man1
 	cp nccnav/nccnav.1 $(MANDIR)/man1
 	cp doc/nognu $(INCLUDEDIR)
 
 uninstall:
-	rm -f $(BINDIR)/nccgen $(BINDIR)/nccnav $(BINDIR)/nccnavi $(MANDIR)/man1/nccgen.1 $(INCLUDEDIR)/nognu
+	rm -f $(BINDIR)/ncc $(BINDIR)/nccnav $(BINDIR)/nccnavi $(MANDIR)/man1/ncc.1 $(INCLUDEDIR)/nognu
 	rm -f $(BINDIR)/nccar $(BINDIR)/nccld $(BINDIR)/nccc++ $(BINDIR)/nccg++
 
 nccnav/nccnav: nccnav/nccnav.C
 	@echo Compiling nccnav viewer.
 	@cd nccnav && make
 
-objdir/nccgen: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
-	$(CC) $(LCFLAGS) $(LDFLAGS) main.C objdir/*.o -o objdir/nccgen 
+objdir/ncc: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
+	$(CC) $(LCFLAGS) main.C objdir/*.o -o objdir/ncc 
 
 objdir/cexpand.o: cexpand.C
 	$(CC) $(CFLAGS) cexpand.C
@@ -89,5 +87,5 @@ clean:
 	rm -f objdir/*.o
 
 distclean:
-	rm -f objdir/* objdir/nccgen
+	rm -f objdir/* objdir/ncc
 	@cd nccnav && make clean
