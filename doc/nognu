@@ -30,6 +30,7 @@
 
 // New stuff
 #define __restrict
+#define __restrict__
 #define __builtin_va_list char*
 #define typeof(x) __typeof__(x)
 

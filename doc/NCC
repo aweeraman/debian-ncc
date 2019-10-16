@@ -1,4 +1,4 @@
-ncc 2.6
+ncc 2.7
 			     -      see doc/CHANGES for the new stuff
 
 
@@ -210,6 +210,10 @@ The advantage of this method is that we don't have to collect the
 nccout files afterwards.  Usually all the right files will have been
 concatenated into one big nccout file at the end of compilation.
 
+This method works best when gcc is used to link the object files, and
+also works pretty well with ar and ld.  However, there are projects
+out there that use crazy Makefiles and libtool, that need special
+hacks to achieve this.
 
 			Output Details
 			--------------
@@ -255,8 +259,9 @@ ncc has been tested with:
 	less, mpeg_play, nasm, ncftp, vim, sox, bind, gdb, flames,
 	xrick (Rick Dangerous!), inform (Text adventure language),
 	linux kernel 2.4.20, zsh, zile, emacs, gnuchess, bash,
-	python, elinks, linux kernel 2.6.9, pygame, jamvm, perl5
-	linux 2.17, gcc 4.2, x.org 7.1, git
+	python, elinks, linux kernel 2.6.9, pygame, jamvm, perl5,
+	linux 2.17, gcc 4.2, x.org 7.1, git, qemu, ffmpeg, libjpeg,
+	openssh
 
 although these programs are correct and ncc lacks testing on finding errors
 on programs with syntax errors.
@@ -309,7 +314,7 @@ to specify depth because some graphs are **really** big:)
 THEREST
 =======
 
-Program written & Copyright (C) Stelios Xanthakis 2002, 2003, 2004, 2005, 2006
+Program written & Copyright (C) Stelios Xanthakis 2002, 2003, 2004, 2005, 2006, 2007
 Distributed under the terms of the Artistic License.
 e-mail: sxanth@ceid.upatras.gr
 ncc latest download: http://students.ceid.upatras.gr/~sxanth/ncc/
@@ -318,3 +323,8 @@ Many contributions and feedback from Scott McKellar <jm407a@sbc.com>
  who now is the other person who knows `how ncc works'.
 Additional hacks for kernel 2.6  by Ben Lau <benlau@linux.org.hk>
 gengraph.py is Copyright (C) 2004 Jose Vasconcellos and GPL.
+
+Also thanks to:
+	Sylvain Beucler, Anuradha Weeraman, Florian Larysch,
+	Deepak Ravi, Thomas Petazzoni, Adam Shostack,
+	Hakon Lovdal, Awesome Walrus

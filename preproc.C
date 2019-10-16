@@ -260,6 +260,7 @@ const char help [] =
 "Options starting with '-nc' are ncc options, while the rest gcc:\n"
 "	-ncgcc : also run gcc compiler (produces useful object file)\n"
 "	-ncgcc=PROG : use PROG instead of \"gcc\"\n"
+"	-nccpp=PROG : use PROG for preprocessing\n"
 " Files:\n"
 "	-ncld : emulate object file output: write the output to <objectfile>"OUTPUT_EXT"\n"
 "	-ncoo : write the output to sourcefile.c"OUTPUT_EXT"\n"
@@ -277,6 +278,7 @@ const char help [] =
 "	-nckey : scan source file for additional output (see doc)\n"
 " Filenames:\n"
 "	-ncfabs : report absolute pathnames in the output\n"
+"	-nc- : ignored option\n"
 "\nncc can also be called as 'nccar', 'nccld', 'nccc++', 'nccg++'\n"
 "In these cases it will invoke the programs 'ar', 'ld', 'c++' and 'g++'\n"
 "and then attempt to collect and link object files with the extension "OUTPUT_EXT"\n"
@@ -305,6 +307,7 @@ void preproc (int argc, char**argv)
 	emubinutils (argc, argv);
 
 	bool spp = false, dontdoit = false, mkobj = false, ncclinker = false;
+	bool rungcc = false;
 	char *keys [10];
 	char **gccopt, **cppopt, **nccopt, **files, **objfiles, **nofileopt;
 	char *ofile = 0;
@@ -335,6 +338,8 @@ void preproc (int argc, char**argv)
 			 (nofileopt [nofileno++] = argv[i]) + 3;
 			if (!strcmp (argv [i], "-ncld"))
 				ncclinker = true;
+			else if (!strcmp (argv [i], "-ncgcc"))
+				rungcc = true;
 		}
 		else {
 			gccopt [gccno++] = argv [i];
@@ -371,7 +376,17 @@ void preproc (int argc, char**argv)
 		ofile = mkobj ? filesno > 1 ? 0 : objfile (files [0]) : (char*) "a.out";
 
 	if (filesno > 1) {
+		if (rungcc)
+			RUN (NULL, gccopt);
 		fprintf (stderr, "Multiple files. Forking\n");
+		if (ofile)
+			for (i = 0; i < nofileno; i++)
+				if (!strcmp (nofileopt [i], "-o"))
+					nofileopt [i] = "-c";
+		if (rungcc)
+			for (i = 0; i < nofileno; i++)
+				if (!strcmp (nofileopt [i], "-ncgcc"))
+					nofileopt [i] = "-nc-";
 		for (i = 0; i < filesno; i++) {
 			nofileopt [nofileno] = files [i];
 			RUN (NULL, nofileopt);
@@ -395,6 +410,7 @@ void preproc (int argc, char**argv)
 			gccopt [0] = nccopt [i] + 4;
 			RUN (NULL, gccopt);
 		}
+		NCCOPT ("-");
 		NCCOPT ("gcc")	RUN (NULL, gccopt);
 		NCCOPT ("cc")	usage_only = false;
 		NCCOPT ("err")	halt_on_error = true;
@@ -407,7 +423,8 @@ void preproc (int argc, char**argv)
 		NCCOPT ("spp")	spp = true;
 		NCCOPT ("fabs")	abs_paths = true;
 		NCCOPT ("nrs")	report_structs = false;
-		NCCPOPT ("key")	keys [keyno++] = nccopt [i] + 3;
+		NCCPOPT ("cpp=") cppopt [0] = nccopt [i] + 4;
+		NCCPOPT ("key")  keys [keyno++] = nccopt [i] + 3;
 		NCCOPT ("quiet");
 		else {
 			fputs (help, stderr);
