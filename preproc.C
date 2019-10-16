@@ -40,12 +40,25 @@ static char *objfile (char *f)
 	return r;
 }
 
+FILE *report_stream;
+
 static void openout (char *f, char *mode = "w")
 {
 	if (!f) return;
 	char *c = (char*) alloca (strlen (f) + sizeof OUTPUT_EXT);
-	freopen (strcat (strcpy (c, f), OUTPUT_EXT), mode, stdout);
+	report_stream = fopen (strcat (strcpy (c, f), OUTPUT_EXT), mode);
 	fprintf (stderr, "ncc: output file is ["COLS"%s"COLE"]\n", c);
+}
+
+static void stripout (char *f)
+{
+	if (report_stream != stdout) {
+		fclose (report_stream);
+		char tmp [1024];
+		sprintf (tmp, "nccstrip2.py %s"OUTPUT_EXT" %s"OUTPUT_EXT, f, f);
+		system (tmp);
+	}
+	report_stream = stdout;
 }
 
 static void CATFILE (char *data, int len, FILE *out)
@@ -75,8 +88,8 @@ static void LINK (char **obj, int objn)
 		if (L.success == ZC_OK) {
 			fprintf (stderr, "ncc: Linking object file ["COLS"%s"COLE"] (%i bytes)\n",
 				 ncobj, L.len);
-			fprintf (stdout, NCCOBJ"%s\n", ncobj);
-			CATFILE (L.data, L.len, stdout);
+			PRINTF (NCCOBJ"%s\n", ncobj);
+			CATFILE (L.data, L.len, report_stream);
 		}
 	}
 }
@@ -93,8 +106,10 @@ static void RUN (char *outfile, char **argv)
 
 	int pid = fork ();
 	if (pid == 0) {
-		if (outfile) if(!freopen (outfile, "w", stdout))
-			exit (127);
+		if (outfile) {
+			if (!freopen (outfile, "w", stdout))
+				exit (127);
+		}
 		execvp (argv [0], argv);
 		exit (127);
 	}
@@ -166,6 +181,7 @@ static void nccar (int argc, char **argv)
 			if (isobj (argv [i])) {
 				openout (argv [i], "a");
 				LINK (&argv [i + 1], argc - i - 1);
+				stripout (argv [i]);
 				return;
 			}
 		fprintf (stderr, "nccar: Nothing to do\n");
@@ -182,11 +198,13 @@ static void nccar (int argc, char **argv)
 		if (!oldarch) {
 			openout (argv [i], "a");
 			LINK (&argv [i + 1], argc - i - 1);
+			stripout (argv [i]);
 			return;
 		}
 
 		/* replacing members in the archive */
-		openout (argv [i], "w");
+		char *outfile = argv [i];
+		openout (outfile, "w");
 		bool skipping = false;
 		char l [512], n [512];
 		while (fgets (l, 500, oldarch)) {
@@ -203,13 +221,14 @@ static void nccar (int argc, char **argv)
 					}
 			}
 			if (!skipping)
-				fputs (l, stdout);
+				fputs (l, report_stream);
 		}
 		fclose (oldarch);
 		unlink (TMPARCH);
 		for (j = i + 1; j < argc; j++)
 			if (strcmp (argv [j], " "))
 				LINK (&argv [j], 1);
+		stripout (outfile);
 	}
 }
 
@@ -230,6 +249,7 @@ static void nccld (int argc, char **argv)
 	if (ofile && objfileno) {
 		openout (ofile);
 		LINK (objfiles, objfileno);
+		stripout (ofile);
 	} else fprintf (stderr, "%s: Nothing to do\n", argv [0]);
 }
 
@@ -287,6 +307,8 @@ const char help [] =
 void preproc (int argc, char**argv)
 {
 	int i;
+
+	report_stream = stdout;
 
 	for (i = 0; i < argc; i++)
 		if (!strcmp (argv [i], "-ncquiet")) {
@@ -373,7 +395,7 @@ void preproc (int argc, char**argv)
 	nofileopt [nofileno + 1] = NULL;
 
 	if (!ofile)
-		ofile = mkobj ? filesno > 1 ? 0 : objfile (files [0]) : (char*) "a.out";
+		ofile = mkobj ? filesno != 1 ? 0 : objfile (files [0]) : (char*) "a.out";
 
 	if (filesno > 1) {
 		if (rungcc)
@@ -396,6 +418,7 @@ void preproc (int argc, char**argv)
 		if (ncclinker) {
 			if (ofile) openout (ofile);
 			LINK (objfiles, objfileno);
+			if (ofile) stripout (ofile);
 		}
 		exit (0);
 	}
@@ -432,8 +455,11 @@ void preproc (int argc, char**argv)
 		}
 
 	if (!(sourcefile = files [0])) {
-		if (objfileno) LINK (objfiles, objfileno);
-		else fprintf (stderr, "ncc: No C source file\n");
+		if (objfileno) {
+			LINK (objfiles, objfileno);
+			if (ofile)
+				stripout (ofile);
+		} else fprintf (stderr, "ncc: No C source file\n");
 		exit (0);
 	}
 	if (dontdoit) {
@@ -471,7 +497,7 @@ void ncc_keys ()
 			if (!strncmp (C_Strings [i] + KSZ, ncc_key [j],
 				      strlen (ncc_key [j]))) break;
 		if (ncc_key [j])
-			printf ("%s", C_Strings [i] + KSZ +
+			PRINTF ("%s", C_Strings [i] + KSZ +
 				strlen (ncc_key [j]));
 	}
 }

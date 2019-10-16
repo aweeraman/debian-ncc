@@ -1222,7 +1222,7 @@ exprID expression_parser::gnu_label_value ()
 static int IDLEV = -1;
 #define PCMD(CMD) \
 	if (pseudo_code) {\
-		printf ("#X: %s\n", CMD);\
+		PRINTF ("#X: %s\n", CMD);\
 	}
 struct PINDENT { PINDENT () { IDLEV += 1; } ~PINDENT () { PCMD ("*"); IDLEV -= 1; } };
 #define PSEUDOCODE(CMD) PINDENT P; PCMD(CMD);
@@ -1410,7 +1410,6 @@ static inline NormPtr join_expression (dcle &E, NormPtr p)
 		E.tofield ();
 		return p + 1;
 	}
-printf ("herez!\n");
 #endif
 	NormPtr pe, cntk;
 	subexpr tee [STDNEE];
@@ -1467,15 +1466,17 @@ printf ("herez!\n");
 
 static NormPtr initializer_aggregate (Symbol s, NormPtr p)
 {
+	// aggregates can be very complex. if something bad happens, skip analysis
+	NormPtr p0 = p;
 	dcle E (s);
 	for (;;) {
 		for (;;)
 		if (CODE [p] == '{') {
 			p++;
-			if (!E.open_bracket ()) syntax_error (p, "open");
+			if (!E.open_bracket ()) goto Bad;
 		} else if (ISSYMBOL (CODE [p]) && CODE [p + 1] == ':') {
 			Symbol d [2] = { CODE [p], -1 };
-			if (!E.designator (d)) syntax_error (p, "designator");
+			if (!E.designator (d)) goto Bad;
 			if (CODE [p += 2] != '{') break;
 		} else if (CODE [p] == '.' || CODE [p] == '[') {
 			Symbol d [20];
@@ -1492,7 +1493,7 @@ static NormPtr initializer_aggregate (Symbol s, NormPtr p)
 				}
 			if (CODE [p] == '=') p++;
 			d [di] = -1;
-			if (!E.designator (d)) syntax_error (p, "designator");
+			if (!E.designator (d)) goto Bad;
 			if (CODE [p] != '{') break;
 		} else break;
 
@@ -1508,15 +1509,17 @@ static NormPtr initializer_aggregate (Symbol s, NormPtr p)
 			if (!E.comma ()) syntax_error (p, "excess");
 		} else break;
 	}
+Bad:
+	return skip_brackets (p0);
 }
 
 //******** end aggregate initializers
 
 static NormPtr initializer_expr (Symbol s, NormPtr p)
 {
-	if (ISSTRING (CODE [p])) {
-		return p + 1;
-	}
+//	if (ISSTRING (CODE [p])) {
+//		return p + 1;
+//	}
 
 	subexpr tee [STDNEE];
 	tee [0].action = '=';

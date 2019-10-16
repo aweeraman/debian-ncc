@@ -253,6 +253,7 @@ void make_norm ()
 static void reserved_c ()
 {
 	RESERVED(__inline__);
+	RESERVED(__inline);
 	RESERVED(inline);
 	RESERVED(do);
 	RESERVED(struct);

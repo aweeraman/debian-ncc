@@ -18,6 +18,7 @@ tout: objdir/ncc nccnav/nccnav
 
 install: tout
 	cp objdir/ncc $(BINDIR)/ncc
+	cp scripts/nccstrip2.py $(BINDIR)/nccstrip2.py
 	ln -sf $(BINDIR)/ncc $(BINDIR)/nccar
 	ln -sf $(BINDIR)/ncc $(BINDIR)/nccld
 	ln -sf $(BINDIR)/ncc $(BINDIR)/nccc++

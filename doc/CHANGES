@@ -1,3 +1,29 @@
+New in 2.8
+==========
+
+- ncc now will automatically strip nccout files (this will work if
+  Python is installed).  Except from less space, in the previous
+  versions under certain circumstances the nccout files could grow
+  exponentially.
+
+- fixed a segfault in link mode without any .c or .o files provided
+  (just an .s file for example)
+
+- The temporary filename that is used to view functions with "vi"
+  (or your favorite highlighting editor), is now different depending
+  on the current function.  So, 'vi' can store the current position
+  of the cursor for every function and that is more functional.
+
+- Robustified parsing of aggregate array initializers that caused
+  many problems with linux 2.6.27. Some assignments to pointers to
+  functions may be missed though.  (help from Luiz Fernando Capitulino)
+
+- work around __builtin_types_compatible_p() that has a syntax with
+  type arguments confusing the parser.  Same for __builtin_offsetof()
+
+- ncc now understands __inline__, __inline and __FUNCTION__ so no need
+  to fix them in nognu.
+
 New in 2.7
 ==========
 

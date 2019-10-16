@@ -7,6 +7,10 @@
 #define COLS "\033[01;37m"
 #define COLE "\033[0m"
 
+#define PRINTF(...) fprintf (report_stream, __VA_ARGS__)
+
+extern FILE *report_stream;
+
 //
 // the types we'll be using
 //

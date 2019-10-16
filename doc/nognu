@@ -1,11 +1,9 @@
 
 #define __attribute__(x)
 #define __const const
-#define __inline__ inline
 #define __signed__ signed
 #define __volatile__ volatile
 #define __volatile volatile
-#define __inline inline
 #define __extension__
 #define asm __asm__
 #define __asm __asm__
@@ -22,7 +20,6 @@
 
 #define __attribute(x)
 
-#define __FUNCTION__ __func__
 #define __PRETTY_FUNCTION__ __func__
 
 // ISOC99
@@ -36,4 +33,5 @@
 
 // What is this?
 #define __builtin_va_arg(x,y) (y)x
-
+#define __builtin_types_compatible_p(x, y) 1
+#define __builtin_offsetof(x,y) 1
