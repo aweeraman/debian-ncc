@@ -1,0 +1,75 @@
+Hacking linux-kernel 2.6
+************************
+
+Linux kernel 2.6 has decided to work around gcc weirdness
+and therefore it conflicts with ncc's nognu macros.  You'll need to
+edit some files in include/linux. The following patch is to demonstrate
+the required changes (if you have gcc3. for another gcc edit the
+apropriate file(s)). It's best to apply the patch *manually*.
+
+++++++++++++++++++++++++PATCH TO MAKE NCC WORKING+++++++++++++++
+--- kernel.h.orig	2004-11-20 05:31:51.000000000 -0800
++++ kernel.h	2004-11-20 05:32:07.000000000 -0800
+@@ -273,6 +273,9 @@
+ 
+ /* Trap pasters of __FUNCTION__ at compile-time */
+ #if __GNUC__ > 2 || __GNUC_MINOR__ >= 95
++#ifdef __NCC__
++#undef __FUNCTION__
++#endif
+ #define __FUNCTION__ (__func__)
+ #endif
+ 
+--- compiler-gcc3.h.orig	2004-11-20 05:33:41.000000000 -0800
++++ compiler-gcc3.h	2004-11-20 05:35:07.000000000 -0800
+@@ -5,8 +5,15 @@
+ 
+ #if __GNUC_MINOR__ >= 1
+ # define inline		inline		__attribute__((always_inline))
+-# define __inline__	__inline__	__attribute__((always_inline))
+-# define __inline	__inline	__attribute__((always_inline))
++# ifdef __NCC__
++#  undef __inline__
++#  undef __inline
++#  define __inline__	inline	__attribute__((always_inline))
++#  define __inline	inline	__attribute__((always_inline))
++#else
++#  define __inline__	__inline__	__attribute__((always_inline))
++#  define __inline	__inline	__attribute__((always_inline))
++#endif
+ #endif
+ 
+ #if __GNUC_MINOR__ > 0
+++++++++++++++++++++++++++++END PATCH+++++++++++++++++++++++++++++
+
+Then edit the root Makefile to use ncc
+
+	HOSTCC = ncc -ncgcc -ncfabs -ncld -ncspp
+	CC = $(CROSS_COMPILE)ncc -ncspp -ncfabs -ncgcc -ncld -ncquiet
+	AR = $(CROSS_COMPILE)nccar -ncquiet
+	LD = $(CROSS_COMPILE)nccld -ncquiet
+
+Also edit the file `scripts/Makefile.build` and search for the
+line 'cmd_modversions =' and modify it in such a way:
+
+#########################################################################
+ 		rm -f $(@D)/.tmp_$(@F) $(@D)/.tmp_$(@F:.o=.ver);	\
+ 	else								\
+ 		mv -f $(@D)/.tmp_$(@F) $@;				\
++		mv -f $(@D)/.tmp_$(@F).nccout $@.nccout;		\
+ 	fi;
+ endif
+#########################################################################
+
+Then compile your kernel. If all goes well, the file vmlinux.nccout
+should appear.  Then do
+
+	nccnav vmlinux.nccout
+
+to hack it.  If you are building into another object directory (like
+`make O=/tmp/kernobj`), then it is much better to invoke the nccnav
+viewer from the root of the source tree.  As
+
+	nccnav /tmp/kernobj/vmlinux.nccout
+
+so that pathnames are relative -- and small.
