@@ -1,7 +1,7 @@
 ncc (2.8-4) unstable; urgency=low
 
   * Converted source format to 3.0 (quilt)
-  * Fixed lintian warnings 
+  * Fixed lintian warnings
 
  -- Anuradha Weeraman <aweeraman@gmail.com>  Fri, 04 Oct 2019 14:45:00 -0500
 
@@ -106,7 +106,7 @@ ncc (2.6-1) unstable; urgency=low
 
 ncc (2.5-2) unstable; urgency=low
 
-  * Fixed debian/control. 
+  * Fixed debian/control.
 
  -- Anuradha Weeraman (anu) <aweeraman@gmail.com>  Tue, 26 Dec 2006 14:56:44 -0500
 

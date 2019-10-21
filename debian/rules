@@ -13,7 +13,7 @@ build-arch: build-stamp
 
 build-indep: build-stamp
 
-build-stamp: configure-stamp 
+build-stamp: configure-stamp
 	dh_testdir
 	[ -e objdir ] || mkdir objdir
 	$(MAKE)
