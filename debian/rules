@@ -28,6 +28,7 @@ clean:
 	rm -f debian/files
 	rm -f scripts/gengraph scripts/gengraph.1
 	rm -f nccgen.1
+	rm -f docs/ncc.h
 	[ ! -f Makefile ] || $(MAKE) distclean
 	dh_clean
 
@@ -47,7 +48,9 @@ binary-arch: build install
 	dh_testroot
 	cp scripts/gengraph.py scripts/gengraph
 	cp scripts/gengraph.py.1 scripts/gengraph.1
+	cp doc/nognu doc/ncc.h
 	dh_install
+	rm -f doc/ncc.h
 	dh_installchangelogs -k doc/CHANGES
 	dh_installdocs -Xdoc/LICENSE -Xdoc/nognu -Xdoc/dbstree.aux \
                        -Xdoc/dbstree.dvi -Xdoc/dbstree.log -Xdoc/farg.c \

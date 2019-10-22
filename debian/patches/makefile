@@ -6,8 +6,10 @@ Author: Anuradha Weeraman <aweeraman@gmail.com>
 Origin: other
 Last-Update: 2019-10-22
 
---- ncc-2.8.orig/Makefile
-+++ ncc-2.8/Makefile
+diff --git a/Makefile b/Makefile
+index 545b445..4e915ab 100644
+--- a/Makefile
++++ b/Makefile
 @@ -2,43 +2,45 @@
  # these are set by config
  CC = g++
@@ -17,7 +19,8 @@ Last-Update: 2019-10-22
  BINDIR = ${DESTDIR}/bin
  MANDIR = ${DESTDIR}/share/man
  INCLUDEDIR = ${DESTDIR}/include
- NOGNU = /usr/include/nognu
+-NOGNU = /usr/include/nognu
++NOGNU = /usr/include/ncc.h
 +SHAREDIR = ${DESTDIR}/share/ncc
  
  #
@@ -63,7 +66,7 @@ Last-Update: 2019-10-22
 -objdir/ncc: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
 -	$(CC) $(LCFLAGS) main.C objdir/*.o -o objdir/ncc 
 +objdir/nccgen: objdir/dbstree.o objdir/inttree.o objdir/lex.o objdir/space.o objdir/cexpand.o objdir/cdb.o objdir/parser.o objdir/ccexpr.o objdir/preproc.o objdir/usage.o main.C
-+	$(CC) $(LCFLAGS) $(LDFLAGS) main.C objdir/*.o -o objdir/nccgen 
++	$(CC) $(LCFLAGS) $(LDFLAGS) main.C objdir/*.o -o objdir/nccgen
  
  objdir/cexpand.o: cexpand.C
  	$(CC) $(CFLAGS) cexpand.C
@@ -74,9 +77,23 @@ Last-Update: 2019-10-22
 -	rm -f objdir/* objdir/ncc
 +	rm -f objdir/* objdir/nccgen
  	@cd nccnav && make clean
-
---- ncc-2.8.orig/nccnav/Makefile
-+++ ncc-2.8/nccnav/Makefile
+diff --git a/config.h b/config.h
+index e5722b5..35511b4 100644
+--- a/config.h
++++ b/config.h
+@@ -14,7 +14,7 @@
+ #define GNU_VIOLATIONS
+ #define LABEL_VALUES
+ #define OUTPUT_EXT ".nccout"
+-#define NOGNU "/usr/include/nognu"
++#define NOGNU "/usr/include/ncc.h"
+ #define NCC_INFILE_KEY "ncc-key"
+ #define FAKE_VARIABLE_ARRAYS
+ #define NCC_ISOC99
+diff --git a/nccnav/Makefile b/nccnav/Makefile
+index 37a4055..c89f310 100644
+--- a/nccnav/Makefile
++++ b/nccnav/Makefile
 @@ -1,12 +1,13 @@
  
  CC = g++

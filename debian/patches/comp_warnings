@@ -34,7 +34,7 @@ index 9a1d9ee..81cffa2 100644
  		fclose (report_stream);
  		char tmp [1024];
 -		sprintf (tmp, "nccstrip2.py %s"OUTPUT_EXT" %s"OUTPUT_EXT, f, f);
-+		sprintf (tmp, "python /usr/share/ncc/nccstrip2.py %s" OUTPUT_EXT "%s" OUTPUT_EXT, f, f);
++		sprintf (tmp, "python2 /usr/share/ncc/helper-scripts/nccstrip2.py %s" OUTPUT_EXT "%s" OUTPUT_EXT, f, f);
  		system (tmp);
  	}
  	report_stream = stdout;

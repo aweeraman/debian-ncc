@@ -1,0 +1,44 @@
+Description: Scripts currently work with Python2
+Author: Anuradha Weeraman <aweeraman@gmail.com>
+Origin: other
+Last-Update: 2019-10-22
+
+diff --git a/scripts/gengraph.py b/scripts/gengraph.py
+index f9c1ccb..9f48d53 100755
+--- a/scripts/gengraph.py
++++ b/scripts/gengraph.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python2
+ #
+ """Usage: %s [options] <nccout> <function> ...
+ valid options:
+@@ -12,7 +12,7 @@ valid options:
+ 
+ Reads a ncc-generated file and produces a call graph in dot format.
+ Sample usage:
+-gengraph.py -i "exit strlen" nccout main |dot -Tsvg -o func.svg
++gengraph -i "exit strlen" nccout main |dot -Tsvg -o func.svg
+ """
+ #
+ # Author: Jose Vasconcellos <jvasco@bellatlantic.net>
+diff --git a/scripts/nccstrip.py b/scripts/nccstrip.py
+index 0f4331b..31d2d9c 100755
+--- a/scripts/nccstrip.py
++++ b/scripts/nccstrip.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python2
+ """I'd rather we did this in perl because
+ it is strictly a practical extraction and report
+ application. Anyway, this compresses nccout files
+diff --git a/scripts/nccstrip2.py b/scripts/nccstrip2.py
+index 9a019c3..85a6bbe 100755
+--- a/scripts/nccstrip2.py
++++ b/scripts/nccstrip2.py
+@@ -1,4 +1,4 @@
+-#!/usr/bin/env python
++#!/usr/bin/python2
+ 
+ # This file is installed and used automatically by ncc each time it
+ # "links" nccout object files.

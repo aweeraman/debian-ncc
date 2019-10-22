@@ -12,7 +12,7 @@ Rules-Requires-Root: no
 
 Package: ncc
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, python
+Depends: ${shlibs:Depends}, ${misc:Depends}, python2
 Description: C source code analyzer
  A small, extensible tool that provides program analysis data of C
  source code. This data can be used to analyze the function call flow

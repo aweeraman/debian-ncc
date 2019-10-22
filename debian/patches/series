@@ -1,3 +1,4 @@
 makefile
 man_pages
 comp_warnings
+python2

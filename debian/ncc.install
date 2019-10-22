@@ -1,3 +1,6 @@
 objdir/nccgen usr/bin/
 scripts/gengraph usr/bin/
 nccnav/nccnav usr/bin/
+doc/ncc.h usr/include/
+scripts/nccstrip2.py usr/share/ncc/helper-scripts/
+scripts/nccstrip.py usr/share/ncc/helper-scripts/
