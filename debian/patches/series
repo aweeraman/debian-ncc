@@ -1,1 +1,3 @@
-debian_patches
+makefile
+man_pages
+comp_warnings

@@ -1,1 +1,3 @@
+objdir/nccgen usr/bin/
 scripts/gengraph usr/bin/
+nccnav/nccnav usr/bin/
