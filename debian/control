@@ -2,10 +2,13 @@ Source: ncc
 Section: devel
 Priority: optional
 Maintainer: Anuradha Weeraman <aweeraman@gmail.com>
-Build-Depends: debhelper (>= 9), libncurses-dev
-Standards-Version: 4.4.0
+Build-Depends: debhelper (>=12~), libncurses-dev, debhelper-compat (=12)
+Standards-Version: 4.4.1
 Uploaders: NIIBE Yutaka <gniibe@fsij.org>
+Vcs-Browser: https://salsa.debian.org/debian/ncc
+Vcs-Git: https://salsa.debian.org/debian/ncc.git
 Homepage: http://students.ceid.upatras.gr/~sxanth/ncc/
+Rules-Requires-Root: no
 
 Package: ncc
 Architecture: any
