@@ -1,0 +1,2 @@
+# the upstream provided download location is only over HTTP
+ncc source: debian-watch-uses-insecure-uri
