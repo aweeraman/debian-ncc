@@ -1,3 +1,12 @@
+ncc (2.8-5) unstable; urgency=medium
+
+  * Bumped up standards version, compat
+  * Updated patches and python scripts
+  * Fixed issue with binaries and scripts not getting installed properly
+  * Lintian fixes
+
+ -- Anuradha Weeraman <aweeraman@gmail.com>  Tue, 22 Oct 2019 17:53:45 -0400
+
 ncc (2.8-4) unstable; urgency=low
 
   * Converted source format to 3.0 (quilt)
