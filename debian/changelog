@@ -1,10 +1,10 @@
-ncc (2.8-5.1) UNRELEASED; urgency=medium
+ncc (2.8-6) unstable; urgency=medium
 
-  * Non-maintainer upload.
+  [ Helmut Grohne ]
   * Fix FTCBFS: Let dh_auto_build pass cross tools to make and pass a
     C++ compiler via CC. (Closes: #943464)
 
- -- Helmut Grohne <helmut@subdivi.de>  Fri, 25 Oct 2019 06:09:42 +0200
+ -- Anuradha Weeraman <aweeraman@gmail.com>  Fri, 25 Oct 2019 08:15:48 -0400
 
 ncc (2.8-5) unstable; urgency=medium
 
