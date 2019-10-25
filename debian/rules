@@ -16,7 +16,7 @@ build-indep: build-stamp
 build-stamp: configure-stamp
 	dh_testdir
 	[ -e objdir ] || mkdir objdir
-	$(MAKE)
+	dh_auto_build -- 'CC=$$(CXX)'
 	touch build-stamp
 
 clean:
